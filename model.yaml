@@ -1,0 +1,23 @@
+doctype: com.datagridsys.doctype/skopos/model
+version: 1
+
+
+components:
+  sample:
+    # The image name and tag are specified as variables in order to make this
+    # sample easier to use, i.e. allow them to be passed as environment Jenkins
+    image: ${sample_service_img}:${sample_service_ver}
+    visual:
+      x: 300
+      y: 150
+
+gateways:
+    in:
+      type: host_port
+      target: ["sample"]
+      exposes:
+        - port: "${http_port-8889}"  # use value of http_port var, 8889 if not defined
+          target_port: "80"
+      visual:
+        x: 20
+        y: 150
