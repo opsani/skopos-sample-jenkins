@@ -57,23 +57,28 @@ Open Jenkins' GUI (available on port 8888) and perform the following actions:
  * After the initial setup is complete, configure the docker plugin for Jenkins:
      * In the Jenkins UI go to _Jenkins -> Manage Jenkins -> Configure System_
      * In the top section set the _Quiet period_ to `1` (one minute minimum between pipeline executions).
-     * At the bottom of the page, under _Cloud_, click _Add a new cloud_.  Provide a name for the new cloud (your choice) and set the _Docker Host URI_ to `unix:///var/run/docker.sock`.
-     * Click _Docker Agent templates..._ and add a docker template:
+     * At the bottom of the page, under _Cloud_, click _Add a new cloud -> Docker_.  Provide a name for the new cloud (your choice) and set the _Docker Host URI_ to `unix:///var/run/docker.sock`.
+     * Click _Docker Agent templates... -> Add Docker Template_:
          -  _Docker Image_:  `jenkins/ssh-slave`
-         -  _Registry Credentials_ (Add): if you are using Docker Hub for your registry, set _Kind_ to `Username with password` and provide your username/password for Docker Hub and set the credentials ID to `sample-docker-registry-id` (you can change that, but you will need to update your Jenkinsfile later).
+         -  _Registry Credentials -> Add -> Jenkins_:
+            -  If you are using Docker Hub for your registry, set _Kind_ to `Username with password` and provide your username/password for Docker Hub.
+            -  Set the credentials ID to `sample-docker-registry-id` (you can change that, but you will need to update your Jenkinsfile later).
+            -  Click _Add_.
+            -  In the drop-down box for _Credentials_ select the credential you just created.
          -  _Connect method_:  `Connect with SSH` and `Inject SSH key`
-         -  _Save_
+         -  Click _Save_ at the bottom of the configuration page.
 
 ## Create a New Jenkins Job
 
  * Go to _Jenkins -> New Item_, select _Pipeline_ and give your job a name, i.e. `skopos_sample`. Click _OK_.
+
 ![jenkins-new-job](img/jenkins-new-job.png)
 
  * On the configuration screen for your new job:
      * Check _Build Triggers -> Poll SCM_ and type `* * * * *` in the text area (this causes Jenkins to poll your git repository every minute).
-     * Under _Pipeline_, select _Definition: Pipeline script from SCM_. Select _SCM -> Git_ and type your forked repository URL (i.e. https://github.com/my-user/my-repo) under _Repository URL_.
-
-Click Apply and Save at the bottom of the screen.
+     * Under _Pipeline_, select _Definition: Pipeline script from SCM_:
+         -  Select _SCM -> Git_ and type your forked repository URL (i.e. https://github.com/my-user/my-repo) under _Repository URL_.
+ * Click _Save_ at the bottom of the screen.
 
 ![jenkins-new-job2](img/jenkins-new-job2.png)
 
@@ -82,7 +87,6 @@ Click Apply and Save at the bottom of the screen.
 Click on _Build Now_ in Jenkins UI for your new job. Verify that the job completes successfully.
 
 If it fails, check the build log. Make sure that the Skopos CLI command in the Jenkinsfile specifies the correct address where Skopos can be reached. For simplicity, this example assumes the Skopos container and Jenkins container run on the same host and that the Skopos container exposes port 8100. If you need to change that, edit the Jenkinsfile in your forked git repo and commit.
-
 
 ## Test Continuous Delivery
 
